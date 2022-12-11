@@ -1,0 +1,15 @@
+TO Insert or create a user with row Query you need to use ()=> {
+    INSERT INTO `user` (`user_id`,`first_name`,`last_name`,`email_id`,`password`,`user_type`,`signup_type`,`createdAt`,`updatedAt`) VALUES (DEFAULT,?,?,?,?,?,?,?,?);
+}
+
+To select a user with row Query you need to use () => {
+    SELECT `user_id`, `first_name`, `last_name`, `email_id`, `password`, `user_type`, `signup_type`, `social_login_id`, `status`, `createdAt`, `updatedAt`, `deletedAt` FROM `user` AS `User` WHERE (`User`.`deletedAt` IS NULL AND (`User`.`user_id` = 1 AND `User`.`user_type` = 2));
+}
+
+to Delete any user or product with row Query you need to use () => {
+    UPDATE `product` SET `deletedAt`=? WHERE `deletedAt` IS NULL AND `product_id` = ?
+}
+
+To Get the Order and Product data which user have order with row Query you need to use () => {
+    SELECT `User`.*, `customer_orders`.`Order_id` AS `customer_orders.Order_id`, `customer_orders`.`product_id` AS `customer_orders.product_id`, `customer_orders`.`price` AS `customer_orders.price`, `customer_orders->user_order_product`.`product_id` AS `customer_orders.user_order_product.product_id`, `customer_orders->user_order_product`.`title` AS `customer_orders.user_order_product.title`, `customer_orders->user_order_product`.`price` AS `customer_orders.user_order_product.price`, `customer_orders->user_order_product`.`author_name` AS `customer_orders.user_order_product.author_name`, `customer_orders->user_order_product`.`publisher` AS `customer_orders.user_order_product.publisher` FROM (SELECT `User`.`user_id`, `User`.`first_name` FROM `user` AS `User` WHERE `User`.`deletedAt` IS NULL AND ( SELECT `user_id` FROM `order` AS `customer_orders` WHERE ((`customer_orders`.`deletedAt` IS NULL) AND `customer_orders`.`user_id` = `User`.`user_id`) LIMIT 1 ) IS NOT NULL LIMIT 0, 5) AS `User` INNER JOIN `order` AS `customer_orders` ON `User`.`user_id` = `customer_orders`.`user_id` AND (`customer_orders`.`deletedAt` IS NULL) LEFT OUTER JOIN `product` AS `customer_orders->user_order_product` ON `customer_orders`.`product_id` = `customer_orders->user_order_product`.`product_id` AND (`customer_orders->user_order_product`.`deletedAt` IS NULL);
+}
