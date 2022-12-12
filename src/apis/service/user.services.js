@@ -1,5 +1,6 @@
 const _repos = require("../repositories/repository");
 const { geoCordinates, jwtToken, hashPassword, verifyPassword } = require("../../utils/util");
+const _stripe = require("../../utils/stripe");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -25,6 +26,10 @@ module.exports = {
             let hashpassword = await hashPassword(password);
 
             request.password = hashpassword;
+
+            let createStripeAccount = await _stripe.createStripeUser({ email_id, first_name });
+
+            request['account_stripe_id'] = createStripeAccount.id
 
             if (signup_type == 1) {
                 user = await _repos.createUser(request);

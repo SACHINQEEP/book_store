@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        account_stripe_id: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         user_type: {
             type: DataTypes.INTEGER,
             defaultValue: 1,
